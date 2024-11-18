@@ -1,0 +1,571 @@
+{
+  "concepts": [
+    {
+      "id": 1,
+      "name": "Components",
+      "progress": 0,
+      "subconcepts": [
+        {
+          "id": 1,
+          "name": "Anatomy of components",
+          "progress": 0
+        },
+        {
+          "id": 2,
+          "name": "Importing and using components",
+          "progress": 0
+        },
+        {
+          "id": 3,
+          "name": "Selectors",
+          "progress": 0
+        },
+        {
+          "id": 4,
+          "name": "Styling",
+          "progress": 0
+        },
+        {
+          "id": 5,
+          "name": "Accepting data with input properties",
+          "progress": 0
+        },
+        {
+          "id": 6,
+          "name": "Custom events with outputs",
+          "progress": 0
+        },
+        {
+          "id": 7,
+          "name": "output() function",
+          "progress": 0
+        },
+        {
+          "id": 8,
+          "name": "Content projection with ng-content",
+          "progress": 0
+        },
+        {
+          "id": 9,
+          "name": "Host elements",
+          "progress": 0
+        },
+        {
+          "id": 10,
+          "name": "Lifecycle",
+          "progress": 0
+        },
+        {
+          "id": 11,
+          "name": "Referencing component children with queries",
+          "progress": 0
+        },
+        {
+          "id": 12,
+          "name": "Using DOM APIs",
+          "progress": 0
+        },
+        {
+          "id": 13,
+          "name": "Inheritance",
+          "progress": 0
+        },
+        {
+          "id": 14,
+          "name": "Programmatically rendering components",
+          "progress": 0
+        },
+        {
+          "id": 15,
+          "name": "Advanced configuration",
+          "progress": 0
+        },
+        {
+          "id": 16,
+          "name": "Custom Elements",
+          "progress": 0
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Templates",
+      "progress": 0,
+      "subconcepts": [
+        {
+          "id": 1,
+          "name": "Overview",
+          "progress": 0
+        },
+        {
+          "id": 2,
+          "name": "Binding dynamic text properties and attributes",
+          "progress": 0
+        },
+        {
+          "id": 3,
+          "name": "Adding event listeners",
+          "progress": 0
+        },
+        {
+          "id": 4,
+          "name": "Two-way binding",
+          "progress": 0
+        },
+        {
+          "id": 5,
+          "name": "Control flow",
+          "progress": 0
+        },
+        {
+          "id": 6,
+          "name": "Pipes",
+          "progress": 0
+        },
+        {
+          "id": 7,
+          "name": "Slotting child content with ng-content",
+          "progress": 0
+        },
+        {
+          "id": 8,
+          "name": "Create template fragments with ng-template",
+          "progress": 0
+        },
+        {
+          "id": 9,
+          "name": "Grouping elements with ng-container",
+          "progress": 0
+        },
+        {
+          "id": 10,
+          "name": "Variables in templates",
+          "progress": 0
+        },
+        {
+          "id": 11,
+          "name": "Deferred loading with @defer",
+          "progress": 0
+        },
+        {
+          "id": 12,
+          "name": "Expression syntax",
+          "progress": 0
+        },
+        {
+          "id": 13,
+          "name": "Whitespace in templates",
+          "progress": 0
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Directives",
+      "progress": 0,
+      "subconcepts": [
+        {
+          "id": 1,
+          "name": "Overview",
+          "progress": 0
+        },
+        {
+          "id": 2,
+          "name": "Attribute directives",
+          "progress": 0
+        },
+        {
+          "id": 3,
+          "name": "Structural directives",
+          "progress": 0
+        },
+        {
+          "id": 4,
+          "name": "Directive composition API",
+          "progress": 0
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Dependency Injection",
+      "progress": 0,
+      "subconcepts": [
+        {
+          "id": 1,
+          "name": "Overview",
+          "progress": 0
+        },
+        {
+          "id": 2,
+          "name": "Understanding dependency injection",
+          "progress": 0
+        },
+        {
+          "id": 3,
+          "name": "Creating an injectable service",
+          "progress": 0
+        },
+        {
+          "id": 4,
+          "name": "Defining dependency providers",
+          "progress": 0
+        },
+        {
+          "id": 5,
+          "name": "Injection context",
+          "progress": 0
+        },
+        {
+          "id": 6,
+          "name": "Hierarchical injectors",
+          "progress": 0
+        },
+        {
+          "id": 7,
+          "name": "Optimizing injection tokens",
+          "progress": 0
+        },
+        {
+          "id": 8,
+          "name": "DI in action",
+          "progress": 0
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Signals",
+      "progress": 0,
+      "subconcepts": [
+        {
+          "id": 1,
+          "name": "Overview",
+          "progress": 0
+        },
+        {
+          "id": 2,
+          "name": "RxJS Interop",
+          "progress": 0
+        },
+        {
+          "id": 3,
+          "name": "Inputs as signals",
+          "progress": 0
+        },
+        {
+          "id": 4,
+          "name": "Model inputs",
+          "progress": 0
+        },
+        {
+          "id": 5,
+          "name": "Queries as signals",
+          "progress": 0
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Routing",
+      "progress": 0,
+      "subconcepts": [
+        {
+          "id": 1,
+          "name": "Overview",
+          "progress": 0
+        },
+        {
+          "id": 2,
+          "name": "Common routing tasks",
+          "progress": 0
+        },
+        {
+          "id": 3,
+          "name": "Routing in single-page applications",
+          "progress": 0
+        },
+        {
+          "id": 4,
+          "name": "Creating custom route matches",
+          "progress": 0
+        },
+        {
+          "id": 5,
+          "name": "Router reference",
+          "progress": 0
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Forms",
+      "progress": 0,
+      "subconcepts": [
+        {
+          "id": 1,
+          "name": "Overview",
+          "progress": 0
+        },
+        {
+          "id": 2,
+          "name": "Reactive forms",
+          "progress": 0
+        },
+        {
+          "id": 3,
+          "name": "Strictly typed reactive forms",
+          "progress": 0
+        },
+        {
+          "id": 4,
+          "name": "Template-driven forms",
+          "progress": 0
+        },
+        {
+          "id": 5,
+          "name": "Validate form input",
+          "progress": 0
+        },
+        {
+          "id": 6,
+          "name": "Building dynamic forms",
+          "progress": 0
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "HTTP Client",
+      "progress": 0,
+      "subconcepts": [
+        {
+          "id": 1,
+          "name": "Overview",
+          "progress": 0
+        },
+        {
+          "id": 2,
+          "name": "Setting up HttpClient",
+          "progress": 0
+        },
+        {
+          "id": 3,
+          "name": "Making requests",
+          "progress": 0
+        },
+        {
+          "id": 4,
+          "name": "Intercepting requests and responses",
+          "progress": 0
+        },
+        {
+          "id": 5,
+          "name": "Testing",
+          "progress": 0
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Performance",
+      "progress": 0,
+      "subconcepts": [
+        {
+          "id": 1,
+          "name": "Overview",
+          "progress": 0
+        },
+        {
+          "id": 2,
+          "name": "Deferrable views",
+          "progress": 0
+        },
+        {
+          "id": 3,
+          "name": "Image Optimization",
+          "progress": 0
+        },
+        {
+          "id": 4,
+          "name": "Server-side Rendering",
+          "progress": 0
+        },
+        {
+          "id": 5,
+          "name": "Build-time prerendering",
+          "progress": 0
+        },
+        {
+          "id": 6,
+          "name": "Hydration",
+          "progress": 0
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Testing",
+      "progress": 0,
+      "subconcepts": [
+        {
+          "id": 1,
+          "name": "Overview",
+          "progress": 0
+        },
+        {
+          "id": 2,
+          "name": "Code coverage",
+          "progress": 0
+        },
+        {
+          "id": 3,
+          "name": "Testing services",
+          "progress": 0
+        },
+        {
+          "id": 4,
+          "name": "Basics of testing components",
+          "progress": 0
+        },
+        {
+          "id": 5,
+          "name": "Component testing scenarios",
+          "progress": 0
+        },
+        {
+          "id": 6,
+          "name": "Testing attribute directives",
+          "progress": 0
+        },
+        {
+          "id": 7,
+          "name": "Testing pipes",
+          "progress": 0
+        },
+        {
+          "id": 8,
+          "name": "Debugging tests",
+          "progress": 0
+        },
+        {
+          "id": 9,
+          "name": "Testing utility APIs",
+          "progress": 0
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Internationalization",
+      "progress": 0,
+      "subconcepts": [
+        {
+          "id": 1,
+          "name": "Overview",
+          "progress": 0
+        },
+        {
+          "id": 2,
+          "name": "Add the localize package",
+          "progress": 0
+        },
+        {
+          "id": 3,
+          "name": "Refer to locales by ID",
+          "progress": 0
+        },
+        {
+          "id": 4,
+          "name": "Format data based on locale",
+          "progress": 0
+        },
+        {
+          "id": 5,
+          "name": "Prepare component for translation",
+          "progress": 0
+        },
+        {
+          "id": 6,
+          "name": "Work with translation files",
+          "progress": 0
+        },
+        {
+          "id": 7,
+          "name": "Merge translations into the app",
+          "progress": 0
+        },
+        {
+          "id": 8,
+          "name": "Deploy multiple locales",
+          "progress": 0
+        },
+        {
+          "id": 9,
+          "name": "Import global variants of the locale data",
+          "progress": 0
+        },
+        {
+          "id": 10,
+          "name": "Manage marked text with custom IDs",
+          "progress": 0
+        },
+        {
+          "id": 11,
+          "name": "Example Angular application",
+          "progress": 0
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Animations",
+      "progress": 0,
+      "subconcepts": [
+        {
+          "id": 1,
+          "name": "Overview",
+          "progress": 0
+        },
+        {
+          "id": 2,
+          "name": "Transition and Triggers",
+          "progress": 0
+        },
+        {
+          "id": 3,
+          "name": "Complex Sequences",
+          "progress": 0
+        },
+        {
+          "id": 4,
+          "name": "Reusable Animations",
+          "progress": 0
+        },
+        {
+          "id": 5,
+          "name": "Route transition animations",
+          "progress": 0
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Experimental features",
+      "progress": 0,
+      "subconcepts": [
+        {
+          "id": 1,
+          "name": "Zoneless",
+          "progress": 0
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "hi",
+      "progress": 0,
+      "subconcepts": []
+    }
+  ]
+}

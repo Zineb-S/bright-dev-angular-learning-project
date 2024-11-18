@@ -1,0 +1,50 @@
+<app-weather></app-weather>
+<div class="container mt-4">
+  <button class="add-concept-btn" (click)="openAddConceptModal()">+</button>
+  <!-- Horizontally scrollable concept list -->
+  <div class="concept-slider">
+    <div
+      *ngFor="let concept of concepts$ | async; let i = index"
+      class="concept-card"
+    >
+      <div class="card h-100 shadow-sm">
+        <div class="card-body d-flex flex-column">
+          <!-- Concept Title and Progress -->
+          <div class="text-center mb-3">
+            <h5 class="card-title">{{ concept.name }}</h5>
+            <p class="card-text">Progress: {{ concept.progress }}%</p>
+          </div>
+          <!-- Circular Chart -->
+          <div class="chart-container mx-auto mb-3">
+            <canvas [id]="'CircularChart-' + i"></canvas>
+          </div>
+          <!-- View Subconcepts Button -->
+          <button
+            class="btn btn-primary mt-auto w-100"
+            (click)="selectConcept(concept)"
+          >
+            View Subconcepts
+          </button>
+          <button
+          *ngIf="!concept.subconcepts || concept.subconcepts.length === 0"
+          class="btn btn-danger"
+          (click)="deleteConcept(concept.id)"
+        >
+          Delete Concept
+        </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subconcept Detail Component -->
+  <app-concept-detail
+    *ngIf="selectedConcept"
+    [concept]="selectedConcept"
+  ></app-concept-detail>
+  <app-add-concept
+  *ngIf="showAddConceptModal"
+  (closed)="closeAddConceptModal()"
+  (conceptAdded)="addNewConcept($event)"
+></app-add-concept>
+</div>

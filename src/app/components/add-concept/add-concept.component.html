@@ -1,0 +1,10 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <h3>Add New Concept</h3>
+    <input [(ngModel)]="newConceptName" placeholder="Concept Name" />
+    <div class="modal-actions">
+      <button (click)="emitAddConcept()">Add</button>
+      <button (click)="close()">Cancel</button>
+    </div>
+  </div>
+</div>

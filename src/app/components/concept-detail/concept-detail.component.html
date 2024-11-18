@@ -1,0 +1,47 @@
+<div class="container mt-4">
+  <h5 class="mb-4">Subconcepts for {{ concept.name }}</h5>
+
+  <!-- Add Subconcept Form -->
+  <div class="mb-4">
+    <input
+      type="text"
+      class="form-control mb-2"
+      [(ngModel)]="newSubConceptName"
+      placeholder="Enter subconcept name"
+    />
+    <button class="btn btn-primary btn-sm" (click)="addSubConcept()">Add Subconcept</button>
+  </div>
+
+  <!-- Subconcept List -->
+  <div class="subconcept-list">
+    <div
+      *ngFor="let sub of concept.subconcepts; let i = index"
+      class="subconcept-item"
+    >
+      <h6>{{ sub.name }}</h6>
+      <label class="form-label">Progress:</label>
+      <input
+        type="number"
+        class="form-control mb-2"
+        [formControl]="subconceptControls[i]"
+        min="0"
+        max="100"
+      />
+      <div class="d-flex gap-2">
+        <button class="btn btn-success btn-sm" (click)="confirmSubProgress(sub.id, i)">Confirm</button>
+        <button class="btn btn-danger btn-sm" (click)="deleteSubConcept(sub.id)">Delete</button>
+      </div>
+      <div *ngIf="subconceptControls[i].invalid && subconceptControls[i].touched" class="text-danger small">
+        <p *ngIf="subconceptControls[i].errors?.['required']">
+          Progress is required.
+        </p>
+        <p *ngIf="subconceptControls[i].errors?.['min']">
+          Progress cannot be less than 0.
+        </p>
+        <p *ngIf="subconceptControls[i].errors?.['max']">
+          Progress cannot be greater than 100.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

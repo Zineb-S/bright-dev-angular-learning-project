@@ -1,0 +1,42 @@
+.card-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .card {
+    background-color: #74bbbb; /* Softer blue for the card */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    padding: 20px;
+    text-align: center;
+    width: 300px; /* Increased card width */
+  }
+  
+  .weather-icon {
+    width: 80px; /* Adjust icon size */
+    height: 80px;
+    margin: 10px auto; /* Center the weather icon */
+    display: block;
+  }
+  
+  .day-part-icon {
+    width: 50px; /* Adjust size for day/night icon */
+    height: 50px;
+    margin: 10px auto; /* Center the day/night icon */
+    display: block;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    color: #333; /* Darker text for contrast */
+    margin-bottom: 10px;
+  }
+  
+  p {
+    margin: 5px 0;
+    color: #555; /* Slightly darker text */
+    font-size: 1.1rem;
+  }
+  
