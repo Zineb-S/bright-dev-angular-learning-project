@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { IndexedDBService } from './indexeddb.service';
-
+import { NotificationService } from './notification.service';
 interface SubConcept {
   id: number;
   name: string;
@@ -22,8 +22,9 @@ interface Concept {
 export class ConceptService {
   private dbUrl = 'assets/db.json'; // Path to your local JSON file
   private concepts$ = new BehaviorSubject<Concept[]>([]);
+ 
 
-  constructor(private http: HttpClient, private indexedDBService: IndexedDBService) {
+  constructor(private http: HttpClient, private indexedDBService: IndexedDBService,private notificationService: NotificationService) {
     this.initializeData();
   }
 
@@ -128,6 +129,14 @@ export class ConceptService {
 
     this.indexedDBService.addData(updatedConcepts).then(() => {
       this.loadConcepts();
+
+      // Trigger a notification
+      const updatedSubconcept = updatedSubconcepts.find((sub) => sub.id === subConceptId);
+      if (updatedSubconcept?.progress === 100) {
+        this.notificationService.sendNotification(
+          `You just completed "${updatedSubconcept.name}"!`
+        );
+      }
     });
   }
 
