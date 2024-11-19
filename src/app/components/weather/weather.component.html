@@ -1,19 +1,18 @@
 <div class="card-container">
-    <div *ngFor="let city of weatherData" class="card">
-      <h3>{{ city.name }}</h3>
-      <img
-        [src]="city.icon"
-        [alt]="city.condition"
-        class="weather-icon"
-      />
-      <p>Temperature: {{ city.temp }}°C</p>
-      <p>Condition: {{ city.condition }}</p>
-      <p>Local Time: {{ city.time }}</p>
-      <img
-        [src]="city.dayPartIcon"
-        [alt]="city.dayPart"
-        class="day-part-icon"
-      />
-    </div>
+  <div *ngFor="let city of weatherData" class="card">
+    <h3>{{ city.name }}</h3>
+    <img
+      [src]="city.icon"
+      [alt]="city.condition"
+      class="weather-icon"
+    />
+    <p>Temperature: {{ city.temp }}°C</p>
+    <p>Condition: {{ city.condition }}</p>
+    <p>Local Time: {{ city.time  }}</p>
+    <img
+      [src]="city.dayPartIcon"
+      [alt]="city.dayPart"
+      class="day-part-icon"
+    />
   </div>
-  
+</div>
