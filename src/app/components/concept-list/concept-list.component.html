@@ -1,6 +1,11 @@
 
-<div class="container mt-4"><app-weather></app-weather>
-  <button class="add-concept-btn" (click)="openAddConceptModal()">Add a concept </button>
+<div class="container mt-4">
+  <div class="button-container">
+    <button class="btn btn-primary add-concept-btn" (click)="openAddConceptModal()">Add Concept</button>
+    <button class="btn btn-danger logout-btn" (click)="logout()">Logout</button>
+  </div>
+  
+  <app-weather></app-weather>
   <!-- Horizontally scrollable concept list -->
   <div class="concept-slider">
     <div

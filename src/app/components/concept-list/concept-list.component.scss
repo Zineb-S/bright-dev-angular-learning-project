@@ -1,64 +1,164 @@
+// Variables for colors
+$primary-color: #66BFBF;
+$background-color: #EAF6F6;
+$white: #FFFFFF;
+$error-color: #FF0063;
+$card-shadow-color: rgba(0, 0, 0, 0.1);
+$hover-shadow-color: rgba(0, 0, 0, 0.2);
+
+// Concept Slider
 .concept-slider {
   display: flex;
   gap: 1rem;
   overflow-x: auto;
   padding: 1rem;
   scroll-snap-type: x mandatory;
+  background-color: lighten($background-color, 10%);
+  border-radius: 8px;
 
   &::-webkit-scrollbar {
     height: 8px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #ddd;
+    background: lighten($primary-color, 30%);
     border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: darken($primary-color, 10%);
   }
 }
 
+// Concept Cards
 .concept-card {
   flex: 0 0 auto;
   width: 250px; /* Fixed width for each concept card */
   scroll-snap-align: start;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
+  .card {
+    background-color: $white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px $card-shadow-color;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 10px $hover-shadow-color;
+    }
+
+    .card-title {
+      color: $primary-color;
+      font-weight: 600;
+    }
+
+    .card-text {
+      color: darken($primary-color, 20%);
+    }
+
+    .btn-primary {
+      background-color: $primary-color;
+      border: none;
+      color: $white;
+      transition: background-color 0.3s ease-in-out;
+
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
+    }
+
+    .btn-danger {
+      background-color: $error-color;
+      border: none;
+      color: $white;
+      transition: background-color 0.3s ease-in-out;
+
+      &:hover {
+        background-color: darken($error-color, 10%);
+      }
+    }
+  }
 }
 
-.card {
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
+// Chart Container
 .chart-container {
   width: 100px;
   height: 100px;
   margin: 0 auto;
-}
-.add-concept-btn {
-  position: fixed;
-  top: 20px;
-  left: 30px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 10%;
-  width: fit-content;
-  height: 50px;
-  font-size: 1.5rem;
+  background-color: lighten($primary-color, 40%);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
+  box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-  &:hover {
-    background-color: #0056b3;
+// Add Concept Button
+
+
+// Subconcept Detail Component
+app-concept-detail {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: $background-color;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+// Button Container
+.button-container {
+  display: flex;
+  justify-content: space-between; // Space out the buttons
+  align-items: center;
+  margin-bottom: 1rem;
+
+  // Shared Button Styles
+  .add-concept-btn,
+  .logout-btn {
+    padding: 0.5rem 1.5rem; // Rectangular shape
+    border-radius: 8px; // Slightly rounded corners
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+
+    &:hover {
+      transform: translateY(-2px); // Slight lift on hover
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); // Subtle shadow on focus
+    }
   }
 
-  &:focus {
-    outline: none;
+  // Add Concept Button
+  .add-concept-btn {
+    background-color: $primary-color;
+    color: $white;
+    border: none;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+
+    &:focus {
+      box-shadow: 0 0 5px lighten($primary-color, 20%);
+    }
+  }
+
+  // Logout Button
+  .logout-btn {
+    background-color: $error-color;
+    color: $white;
+    border: none;
+
+    &:hover {
+      background-color: darken($error-color, 10%);
+    }
+
+    &:focus {
+      box-shadow: 0 0 5px lighten($error-color, 20%);
+    }
   }
 }

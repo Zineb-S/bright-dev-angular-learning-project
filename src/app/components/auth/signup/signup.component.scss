@@ -1,12 +1,126 @@
+// Variables for colors
+$primary-color: #66BFBF;
+$background-color: #EAF6F6;
+$white: #FFFFFF;
+$error-color: #FF0063;
+$gradient-bg: linear-gradient(135deg, $primary-color, lighten($primary-color, 20%), $background-color);
+
+// General background styling
+body {
+  background: $gradient-bg;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Arial', sans-serif;
+}
+
+// Container with subtle entry animation
 .container {
-    max-width: 400px;
-    margin: 0 auto;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: $background-color;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 1s ease-in-out;
+
+  h2 {
+    color: $primary-color;
+    font-weight: 600;
   }
-  button {
-    background-color: #007bff;
-    color: white;
+
+  form {
+    margin-top: 2rem;
   }
+
+  .form-label {
+    color: $primary-color;
+    font-weight: 500;
+  }
+
+  input {
+    background-color: $white;
+    border: 1px solid lighten($primary-color, 30%);
+    border-radius: 4px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, transform 0.2s ease;
+
+    &:focus {
+      border-color: $primary-color;
+      outline: none;
+      box-shadow: 0 0 5px rgba($primary-color, 0.5);
+      transform: scale(1.02); // Slight zoom effect on focus
+    }
+  }
+
   .is-invalid {
-    border-color: red;
+    border-color: $error-color;
+
+    &:focus {
+      box-shadow: 0 0 5px rgba($error-color, 0.5);
+      transform: scale(1.02);
+    }
   }
-  
+
+  .text-danger {
+    color: $error-color;
+    font-size: 0.875rem;
+  }
+
+  button {
+    background-color: $primary-color;
+    color: $white;
+    border: none;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+      transform: scale(1.05); // Slight zoom on hover
+    }
+
+    &:disabled {
+      background-color: lighten($primary-color, 20%);
+      cursor: not-allowed;
+    }
+  }
+
+  p {
+    margin-top: 1.5rem;
+    text-align: center;
+
+    a {
+      color: $error-color;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: darken($error-color, 10%);
+      }
+    }
+  }
+
+  .text-center {
+    &.text-danger {
+      color: $error-color;
+    }
+  }
+}
+
+// Keyframes for fade-in animation
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -7,7 +7,7 @@ import Chart from 'chart.js/auto';
 import { WeatherComponent } from '../weather/weather.component';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { AuthService } from '../../services/auth.service';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-concept-list',
   standalone: true,
@@ -20,7 +20,7 @@ export class ConceptListComponent implements OnInit {
   selectedConcept: any = null;
   showAddConceptModal = false;
 
-  constructor(private conceptService: ConceptService,private authService:AuthService) {}
+  constructor(private conceptService: ConceptService,private authService:AuthService,private router: Router) {}
 
   ngOnInit() {
     this.conceptService.getConcepts().subscribe((concepts) => {
@@ -70,8 +70,10 @@ export class ConceptListComponent implements OnInit {
   }
   
   
-  
-
+  logout() {
+    this.authService.logout(); // Use AuthService to clear session
+    this.router.navigate(['/login']); // Redirect to login
+  }
   selectConcept(concept: any): void {
     console.log('Selected concept:', concept); // Debugging log
     this.selectedConcept = concept;
