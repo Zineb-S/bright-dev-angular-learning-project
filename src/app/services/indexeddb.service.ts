@@ -5,79 +5,117 @@ import { Injectable } from '@angular/core';
 })
 export class IndexedDBService {
   private dbName = 'ConceptsDB';
-  private storeName = 'concepts';
 
-  // Open or create the database
   openDatabase(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, 1);
-
+      const request = indexedDB.open(this.dbName, 3); // Increment version if necessary
+  
       request.onupgradeneeded = (event: any) => {
         const db = event.target.result;
-
-        // Create an object store if it doesn't exist
-        if (!db.objectStoreNames.contains(this.storeName)) {
-          db.createObjectStore(this.storeName, { keyPath: 'id' });
+  
+        if (!db.objectStoreNames.contains('users')) {
+          db.createObjectStore('users', { keyPath: 'email' });
+          console.log('Created users store');
+        }
+  
+        if (!db.objectStoreNames.contains('concepts')) {
+          db.createObjectStore('concepts', { keyPath: 'id' });
+          console.log('Created concepts store');
         }
       };
-
-      request.onsuccess = () => {
-        resolve(request.result);
-      };
-
-      request.onerror = () => {
-        reject(request.error);
-      };
+  
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
     });
   }
-
-  // Get all data from the store
-  getData(): Promise<any[]> {
+  addUser(user: any): Promise<void> {
     return this.openDatabase().then((db) => {
-      const transaction = db.transaction(this.storeName, 'readonly');
-      const store = transaction.objectStore(this.storeName);
-      const request = store.getAll();
-
+      const transaction = db.transaction('users', 'readwrite');
+      const store = transaction.objectStore('users');
+      return new Promise<void>((resolve, reject) => {
+        const request = store.put(user); // Use put to update or add
+        request.onsuccess = () => {
+          console.log('User added to IndexedDB:', user);
+          resolve();
+        };
+        request.onerror = () => {
+          console.error('Failed to add user to IndexedDB:', request.error);
+          reject(request.error);
+        };
+      });
+    });
+  }
+  
+  getUser(email: string): Promise<any> {
+    return this.openDatabase().then((db) => {
+      const transaction = db.transaction('users', 'readonly');
+      const store = transaction.objectStore('users');
+      return new Promise<any>((resolve, reject) => {
+        const request = store.get(email); // Get user by email
+        request.onsuccess = () => {
+          console.log('Fetched user from IndexedDB:', request.result);
+          resolve(request.result);
+        };
+        request.onerror = () => {
+          console.error('Failed to fetch user from IndexedDB:', request.error);
+          reject(request.error);
+        };
+      });
+    });
+  }
+  
+  
+  getData(storeName: string): Promise<any[]> {
+    return this.openDatabase().then((db) => {
+      const transaction = db.transaction(storeName, 'readonly');
+      const store = transaction.objectStore(storeName);
       return new Promise<any[]>((resolve, reject) => {
+        const request = store.getAll();
         request.onsuccess = () => resolve(request.result);
         request.onerror = () => reject(request.error);
       });
     });
   }
 
-  // Add data to the store
-  addData(data: any[]): Promise<void> {
+  addData(storeName: string, data: any): Promise<void> {
     return this.openDatabase().then((db) => {
-      const transaction = db.transaction(this.storeName, 'readwrite');
-      const store = transaction.objectStore(this.storeName);
-  
-      // Clear the store before adding new data
-      const clearRequest = store.clear();
+      const transaction = db.transaction(storeName, 'readwrite');
+      const store = transaction.objectStore(storeName);
+      return new Promise<void>((resolve, reject) => {
+        store.put(data);
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = () => reject(transaction.error);
+      });
+    });
+  }
+
+  addBulkData(storeName: string, data: any[]): Promise<void> {
+    console.log(`Adding bulk data to store: ${storeName}`, data);
+    return this.openDatabase().then((db) => {
+      const transaction = db.transaction(storeName, 'readwrite');
+      const store = transaction.objectStore(storeName);
   
       return new Promise<void>((resolve, reject) => {
-        clearRequest.onsuccess = () => {
-          // Add the new data after clearing the store
-          data.forEach((item) => store.put(item));
-          transaction.oncomplete = () => resolve();
-          transaction.onerror = () => reject(transaction.error);
-        };
-        clearRequest.onerror = () => reject(clearRequest.error);
+        data.forEach((item) => {
+          const request = store.put(item);
+          request.onsuccess = () => console.log(`Added item to ${storeName}:`, item);
+          request.onerror = () => console.error(`Failed to add item:`, item);
+        });
+  
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = () => reject(transaction.error);
       });
     });
   }
   
-
-  // Clear all data from the store
-  clearData(): Promise<void> {
+  deleteData(storeName: string, id: number): Promise<void> {
     return this.openDatabase().then((db) => {
-      const transaction = db.transaction(this.storeName, 'readwrite');
-      const store = transaction.objectStore(this.storeName);
-
-      const request = store.clear();
-
+      const transaction = db.transaction(storeName, 'readwrite');
+      const store = transaction.objectStore(storeName);
       return new Promise<void>((resolve, reject) => {
-        request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
+        store.delete(id);
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = () => reject(transaction.error);
       });
     });
   }

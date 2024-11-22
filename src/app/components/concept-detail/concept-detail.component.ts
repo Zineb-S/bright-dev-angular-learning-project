@@ -69,9 +69,12 @@ export class ConceptDetailComponent implements OnInit {
 
   // Delete a subconcept
   deleteSubConcept(subId: number) {
-    this.conceptService.deleteSubConcept(this.concept.id, subId);
-    this.refreshSubconcepts(); // Refresh after deletion
+    if (confirm('Are you sure you want to delete this subconcept?')) {
+      this.conceptService.deleteSubConcept(this.concept.id, subId);
+      this.refreshSubconcepts();
+    }
   }
+  
 
   // Refresh subconcepts and controls
   private refreshSubconcepts() {

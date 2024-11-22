@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { IndexedDBService } from './indexeddb.service';
 import { NotificationService } from './notification.service';
+import { AuthService } from './auth.service';
+
 interface SubConcept {
   id: number;
   name: string;
@@ -14,178 +16,178 @@ interface Concept {
   name: string;
   progress: number;
   subconcepts: SubConcept[];
+  userId?: string; // Shared if undefined, user-specific if set
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConceptService {
-  private dbUrl = 'assets/db.json'; // Path to your local JSON file
+  private dbUrl = 'assets/db.json';
   private concepts$ = new BehaviorSubject<Concept[]>([]);
- 
 
-  constructor(private http: HttpClient, private indexedDBService: IndexedDBService,private notificationService: NotificationService) {
+  constructor(
+    private http: HttpClient,
+    private indexedDBService: IndexedDBService,
+    private notificationService: NotificationService,
+    private authService: AuthService
+  ) {
     this.initializeData();
   }
 
-  // Initialize data from IndexedDB or load from assets/db.json
   private initializeData(): void {
-    this.indexedDBService.getData().then((data) => {
-      if (data.length === 0) {
-        // If IndexedDB is empty, fetch data from db.json
+    console.log('Initializing concepts data...');
+    const user = this.authService.getLoggedInUser();
+    if (!user) {
+      console.warn('No user logged in. Initialization skipped.');
+      return;
+    }
+  
+    this.indexedDBService.getData('concepts').then((concepts) => {
+      console.log('Existing concepts in IndexedDB:', concepts);
+      if (concepts.length === 0) {
         this.http.get<{ concepts: Concept[] }>(this.dbUrl).subscribe((response) => {
-          this.indexedDBService.addData(response.concepts).then(() => {
-            this.loadConcepts(); // Load concepts into BehaviorSubject
+          const sharedConcepts = response.concepts.map((concept) => ({
+            ...concept,
+            userId: undefined, // Shared concepts have no userId
+          }));
+  
+          console.log('Fetched shared concepts from db.json:', sharedConcepts);
+  
+          this.indexedDBService.addBulkData('concepts', sharedConcepts).then(() => {
+            console.log('Shared concepts added to IndexedDB');
+            this.loadConcepts();
           });
         });
       } else {
-        this.loadConcepts(); // Load concepts from IndexedDB
+        console.log('Concepts already exist in IndexedDB. Skipping initialization.');
+        this.loadConcepts();
       }
     });
   }
+  
+  
 
-  // Load concepts from IndexedDB
-  private loadConcepts(): void {
-    this.indexedDBService.getData().then((data) => {
-      this.concepts$.next(data);
-    });
-  }
-
-  // Get observable for concepts
   getConcepts() {
     return this.concepts$.asObservable();
   }
 
-  // Add a new concept
   addConcept(newConcept: { name: string }): void {
-    const currentConcepts = this.concepts$.value;
-    const newId = currentConcepts.length > 0 ? Math.max(...currentConcepts.map((c) => c.id)) + 1 : 1;
-
-    const conceptToAdd: Concept = {
-      id: newId,
-      name: newConcept.name,
-      progress: 0,
-      subconcepts: [],
-    };
-
-    const updatedConcepts = [...currentConcepts, conceptToAdd];
-    this.indexedDBService.addData(updatedConcepts).then(() => {
-      this.loadConcepts();
+    const user = this.authService.getLoggedInUser();
+    if (!user) return;
+  
+    // Find the maximum existing concept ID
+    this.indexedDBService.getData('concepts').then((concepts) => {
+      const maxId = concepts.length > 0 ? Math.max(...concepts.map(c => c.id)) : 0;
+      const newId = maxId + 1;
+  
+      const conceptToAdd: Concept = {
+        id: newId,
+        name: newConcept.name,
+        progress: 0,
+        subconcepts: [],
+        userId: user.id, // Associate concept with the current user
+      };
+  
+      this.indexedDBService.addData('concepts', conceptToAdd).then(() => {
+        this.loadConcepts();
+      });
     });
   }
-
-  // Add a new subconcept
+  
   addSubConcept(conceptId: number, newSubConcept: { name: string }): void {
-    const currentConcepts = this.concepts$.value;
-    const conceptToUpdate = currentConcepts.find((c) => c.id === conceptId);
-    if (!conceptToUpdate) return;
-
-    const newSubId =
-      conceptToUpdate.subconcepts.length > 0
-        ? Math.max(...conceptToUpdate.subconcepts.map((sub) => sub.id)) + 1
-        : 1;
-
-    const subConceptToAdd = {
-      id: newSubId,
-      name: newSubConcept.name,
-      progress: 0,
-    };
-
-    const updatedSubconcepts = [...conceptToUpdate.subconcepts, subConceptToAdd];
-    const updatedConcept = {
-      ...conceptToUpdate,
-      subconcepts: updatedSubconcepts,
-      progress: this.calculateOverallProgress(updatedSubconcepts),
-    };
-
-    const updatedConcepts = currentConcepts.map((c) =>
-      c.id === conceptId ? updatedConcept : c
-    );
-
-    this.indexedDBService.addData(updatedConcepts).then(() => {
-      this.loadConcepts();
+    this.indexedDBService.getData('concepts').then((concepts) => {
+      const conceptToUpdate = concepts.find((concept: Concept) => concept.id === conceptId);
+      if (!conceptToUpdate) return;
+  
+      // Find the maximum existing subconcept ID
+      const maxSubId = conceptToUpdate.subconcepts.length > 0
+        ? Math.max(...conceptToUpdate.subconcepts.map((sub: { id: any; }) => sub.id))
+        : 0;
+      const newSubId = maxSubId + 1;
+  
+      const subConceptToAdd: SubConcept = { id: newSubId, name: newSubConcept.name, progress: 0 };
+  
+      conceptToUpdate.subconcepts.push(subConceptToAdd);
+      conceptToUpdate.progress = this.calculateOverallProgress(conceptToUpdate.subconcepts);
+  
+      this.indexedDBService.addData('concepts', conceptToUpdate).then(() => {
+        this.loadConcepts();
+      });
     });
   }
+  
 
-  // Update subconcept progress
   updateSubConceptProgress(conceptId: number, subConceptId: number, progress: number): void {
-    const currentConcepts = this.concepts$.value;
-    const conceptToUpdate = currentConcepts.find((c) => c.id === conceptId);
-    if (!conceptToUpdate) return;
+    this.indexedDBService.getData('concepts').then((concepts) => {
+      const conceptToUpdate = concepts.find((concept: Concept) => concept.id === conceptId);
+      if (!conceptToUpdate) return;
 
-    const updatedSubconcepts = conceptToUpdate.subconcepts.map((sub) =>
-      sub.id === subConceptId ? { ...sub, progress } : sub
-    );
+      const updatedSubconcepts = conceptToUpdate.subconcepts.map((sub: { id: number; }) =>
+        sub.id === subConceptId ? { ...sub, progress } : sub
+      );
 
-    const updatedConcept = {
-      ...conceptToUpdate,
-      subconcepts: updatedSubconcepts,
-      progress: this.calculateOverallProgress(updatedSubconcepts),
-    };
+      conceptToUpdate.subconcepts = updatedSubconcepts;
+      conceptToUpdate.progress = this.calculateOverallProgress(updatedSubconcepts);
 
-    const updatedConcepts = currentConcepts.map((c) =>
-      c.id === conceptId ? updatedConcept : c
-    );
-
-    this.indexedDBService.addData(updatedConcepts).then(() => {
-      this.loadConcepts();
-
-      // Trigger a notification
-      const updatedSubconcept = updatedSubconcepts.find((sub) => sub.id === subConceptId);
-      if (updatedSubconcept?.progress === 100) {
-        this.notificationService.sendNotification(
-          `You just completed "${updatedSubconcept.name}"!`
-        );
-      }
+      this.indexedDBService.addData('concepts', conceptToUpdate).then(() => {
+        this.loadConcepts();
+      });
     });
   }
 
-  // Delete a concept
-  deleteConcept(conceptId: number): void {
-    // Filter out the concept to delete
-    const updatedConcepts = this.concepts$.value.filter((concept) => concept.id !== conceptId);
-  
-    // Update IndexedDB
-    this.indexedDBService.addData(updatedConcepts).then(() => {
-      // Update the BehaviorSubject after successfully updating IndexedDB
-      this.concepts$.next(updatedConcepts);
-    });
-  }
-  
-  
+deleteConcept(conceptId: number): void {
+  const user = this.authService.getLoggedInUser();
+  if (!user) return;
 
-  // Delete a subconcept
-  deleteSubConcept(conceptId: number, subConceptId: number): void {
-    const currentConcepts = this.concepts$.value;
-    const conceptToUpdate = currentConcepts.find((c) => c.id === conceptId);
-    if (!conceptToUpdate) return;
+  this.indexedDBService.getData('concepts').then((concepts) => {
+    const conceptToDelete = concepts.find((c: Concept) => c.id === conceptId);
+    if (!conceptToDelete) return;
 
-    const updatedSubconcepts = conceptToUpdate.subconcepts.filter((sub) => sub.id !== subConceptId);
-    const updatedConcept = {
-      ...conceptToUpdate,
-      subconcepts: updatedSubconcepts,
-      progress: this.calculateOverallProgress(updatedSubconcepts),
-    };
-
-    const updatedConcepts = currentConcepts.map((c) =>
-      c.id === conceptId ? updatedConcept : c
-    );
-
-    this.indexedDBService.addData(updatedConcepts).then(() => {
-      this.loadConcepts();
-    });
-  }
-
-  // Helper method to calculate overall progress
-  private calculateOverallProgress(subconcepts: SubConcept[]): number {
-    if (subconcepts.length === 0) {
-      return 0; // No subconcepts, progress is 0
+    if (conceptToDelete.userId && conceptToDelete.userId !== user.id) {
+      alert('You cannot delete shared concepts!');
+      return;
     }
-  
+
+    this.indexedDBService.deleteData('concepts', conceptId).then(() => {
+      this.loadConcepts();
+    });
+  });
+}
+
+deleteSubConcept(conceptId: number, subConceptId: number): void {
+  this.indexedDBService.getData('concepts').then((concepts) => {
+    const conceptToUpdate = concepts.find((concept: Concept) => concept.id === conceptId);
+    if (!conceptToUpdate) return;
+
+    conceptToUpdate.subconcepts = conceptToUpdate.subconcepts.filter(
+      (sub: SubConcept) => sub.id !== subConceptId
+    );
+    conceptToUpdate.progress = this.calculateOverallProgress(conceptToUpdate.subconcepts);
+
+    this.indexedDBService.addData('concepts', conceptToUpdate).then(() => {
+      this.loadConcepts();
+    });
+  });
+}
+
+
+  private calculateOverallProgress(subconcepts: SubConcept[]): number {
+    if (subconcepts.length === 0) return 0;
+
     const totalProgress = subconcepts.reduce((sum, sub) => sum + sub.progress, 0);
-    const averageProgress = totalProgress / subconcepts.length;
-  
-    // Round the result to 2 decimal places
-    return parseFloat(averageProgress.toFixed(2));  // Convert the result back to a number
+    return parseFloat((totalProgress / subconcepts.length).toFixed(2));
+  }
+
+  private loadConcepts(): void {
+    const user = this.authService.getLoggedInUser();
+    if (!user) return;
+
+    this.indexedDBService.getData('concepts').then((concepts) => {
+      const userSpecificConcepts = concepts.filter(
+        (concept: Concept) => concept.userId === user.id || concept.userId === undefined
+      );
+      this.concepts$.next(userSpecificConcepts);
+    });
   }
 }

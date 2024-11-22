@@ -5,6 +5,8 @@ import { AddConceptComponent } from "../add-concept/add-concept.component";
 import { CommonModule } from '@angular/common';
 import Chart from 'chart.js/auto';
 import { WeatherComponent } from '../weather/weather.component';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-concept-list',
@@ -18,43 +20,57 @@ export class ConceptListComponent implements OnInit {
   selectedConcept: any = null;
   showAddConceptModal = false;
 
-  constructor(private conceptService: ConceptService) {}
+  constructor(private conceptService: ConceptService,private authService:AuthService) {}
 
   ngOnInit() {
-    this.concepts$.subscribe((concepts) => {
-      // Initialize charts for all concepts
-      concepts.forEach((concept, index) => this.createCircularChart(concept, index));
+    this.conceptService.getConcepts().subscribe((concepts) => {
+      this.concepts$ = new BehaviorSubject(concepts).asObservable();
+  
+      // Create charts for each concept after concepts load
+      concepts.forEach((concept, index) => {
+        this.createCircularChart(concept, index);
+      });
     });
   }
+  
+  
 
   createCircularChart(concept: any, index: number): void {
     const chartId = `CircularChart-${index}`;
-    const progress = concept.progress;
-
-    // Wait for the DOM element to be available
+    console.log(`Creating chart with ID: ${chartId}`);
+  
     setTimeout(() => {
-      new Chart(chartId, {
-        type: 'doughnut',
-        data: {
-          labels: ['Completed', 'Remaining'],
-          datasets: [
-            {
-              data: [progress, 100 - progress],
-              backgroundColor: ['#28a745', '#e9ecef'],
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          cutout: '70%',
-          plugins: {
-            legend: { display: false },
-            tooltip: { enabled: true },
+      const element = document.getElementById(chartId) as HTMLCanvasElement;
+  
+      if (element) {
+        new Chart(element, {
+          type: 'doughnut',
+          data: {
+            labels: ['Completed', 'Remaining'],
+            datasets: [
+              {
+                data: [concept.progress, 100 - concept.progress],
+                backgroundColor: ['#28a745', '#e9ecef'],
+              },
+            ],
           },
-        },
-      });
-    }, 0); // Ensures chart is initialized after DOM rendering
+          options: {
+            responsive: true,
+            cutout: '70%',
+            plugins: {
+              legend: { display: false },
+              tooltip: { enabled: true },
+            },
+          },
+        });
+      } else {
+        console.warn(`Chart element not found for ID: ${chartId}`);
+      }
+    }, 0); // Delay ensures DOM is updated
   }
+  
+  
+  
 
   selectConcept(concept: any): void {
     console.log('Selected concept:', concept); // Debugging log

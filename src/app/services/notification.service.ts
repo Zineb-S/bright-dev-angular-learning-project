@@ -26,6 +26,6 @@ export class NotificationService {
 
   // Send a specific notification
   sendNotification(message: string) {
-    this.toastr.success(message, 'Notification'); // Display as a success toast
+    this.toastr.success(message, 'Notification'); 
   }
 }

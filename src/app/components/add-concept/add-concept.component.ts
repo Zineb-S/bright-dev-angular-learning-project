@@ -11,10 +11,10 @@ import { FormsModule } from '@angular/forms';
 })
 export class AddConceptComponent {
   @Output() closed = new EventEmitter<void>();
-  @Output() conceptAdded = new EventEmitter<string>(); // Renamed to avoid conflict
+  @Output() conceptAdded = new EventEmitter<string>(); 
   newConceptName: string = '';
 
-  emitAddConcept() { // Renamed method to avoid conflict
+  emitAddConcept() { 
     if (this.newConceptName.trim()) {
       this.conceptAdded.emit(this.newConceptName.trim());
       this.newConceptName = '';

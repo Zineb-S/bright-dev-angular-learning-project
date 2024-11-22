@@ -12,6 +12,7 @@
           <!-- Concept Title and Progress -->
           <div class="text-center mb-3">
             <h5 class="card-title">{{ concept.name }}</h5>
+            <small *ngIf="!concept.userId" class="text-muted">(Shared)</small>
             <p class="card-text">Progress: {{ concept.progress }}%</p>
           </div>
           <!-- Circular Chart -->
@@ -26,7 +27,7 @@
             View Subconcepts
           </button>
           <button
-          *ngIf="!concept.subconcepts || concept.subconcepts.length === 0"
+          *ngIf="!concept.subconcepts || concept.subconcepts.length === 0 || concept.userId"
           class="btn btn-danger"
           (click)="deleteConcept(concept.id)"
         >
@@ -42,9 +43,11 @@
     *ngIf="selectedConcept"
     [concept]="selectedConcept"
   ></app-concept-detail>
+
   <app-add-concept
   *ngIf="showAddConceptModal"
   (closed)="closeAddConceptModal()"
   (conceptAdded)="addNewConcept($event)"
 ></app-add-concept>
+
 </div>
